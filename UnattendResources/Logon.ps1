@@ -212,6 +212,15 @@ try
         throw "Installing $CloudbaseInitMsiPath failed. Log: $CloudbaseInitMsiLog"
     }
 
+    $TelegrafMsiPath = "$resourcesDir\telegrafa_windows_server_2003+_x64_v1.0.3.msi"
+    $TelegrafConfTemplate = "$resourcesDir\telegraf_windows.conf"
+    $TelegrafConfPath = "C:\Program Files (x86)\AWC\telegrafa\telegraf_windows.conf"
+    Start-Process -Wait -PassThru -FilePath msiexec -ArgumentList "/i $TelegrafMsiPath /quiet /passive"
+    Move-Item -Force $TelegrafConfTemplate $TelegrafConfPath
+    $LocalScript = "$resourcesDir\init.ps1"
+    $CloudbaseLocalScript = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\LocalScripts\init.ps1"
+    Move-Item -Force $LocalScript $CloudbaseLocalScript
+
     $Host.UI.RawUI.WindowTitle = "Running SetSetupComplete..."
     & "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\bin\SetSetupComplete.cmd"
 
